@@ -13,14 +13,20 @@ project(
   version : '0.0.1',
 )
 
+conf = configuration_data()
+conf.set_quoted('USRDIR', get_option('usr-dir'))
+conf.set('_GNU_SOURCE', 1)
+
+config_h = configure_file(
+	         output : 'config.h',
+        	 configuration : conf)
+
 cc = meson.get_compiler('c')
 pkg = import('pkgconfig')
 inc = include_directories('include')
 
-add_project_arguments(['-D_GNU_SOURCE=1',
-		       '-D_FORTIFY_SOURCE=2'], language : 'c')
-
 possible_cc_flags = [
+		  '-D_FORTIFY_SOURCE=2',
                   '-flto=auto',
                   '-ffat-lto-objects',
 		  '-fstack-protector-strong',

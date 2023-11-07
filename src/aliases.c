@@ -15,6 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include "config.h"
+
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>

@@ -1,0 +1,2 @@
+option('usr-dir', type : 'string', value : '/usr/etc',
+       description : 'path to config files below /usr')

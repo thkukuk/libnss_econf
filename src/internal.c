@@ -15,6 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include "config.h"
 #include "nss-econf.h"
 
 void
@@ -42,7 +43,7 @@ internal_setent_nokeys (struct data_t *data, const char *database,
 
   if (data->key_file == NULL)
     {
-      econf_err error = econf_readDirs (&(data->key_file), "/usr/etc", "/etc",
+      econf_err error = econf_readDirs (&(data->key_file), USRDIR, "/etc",
 					database, NULL, delim, "#");
       if (error)
 	return NSS_STATUS_UNAVAIL;
