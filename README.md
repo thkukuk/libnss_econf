@@ -4,7 +4,8 @@ This is a NSS module for glibc which can read several databases like
 `services` or `rpc` from different places on the filesystem and merge
 them to one.
 
-It follows the [Configuration Files Specification](https://github.com/uapi-group/specifications/blob/main/specs/configuration_files_specification.md)
+It follows the [Configuration Files Specification](https://github.com/uapi-group/specifications/blob/main/specs/configuration_files_specification.md) of the 
+[Linux Userspace API Group](https://uapi-group.org/).
 
 ## Usage
 
