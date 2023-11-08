@@ -8,7 +8,7 @@ project(
                   'prefix=/usr',
                   'sysconfdir=/etc',
 		  'b_pie=true',
-		  'warning_level=3',],
+		  'warning_level=2',],
   license : 'LGPLv2+',
   version : '0.0.1',
 )

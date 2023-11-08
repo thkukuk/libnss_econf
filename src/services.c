@@ -36,8 +36,6 @@ LINE_PARSER
  STRING_FIELD (result->s_proto, isspace, 1);
  )
 
-static struct data_t global_data = {NULL, NULL, 0, 0};
-static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 static enum nss_status
 internal_getent (struct data_t *data, struct servent *serv,
@@ -68,100 +66,32 @@ internal_getent (struct data_t *data, struct servent *serv,
   return NSS_STATUS_SUCCESS;
 }
 
+#define STRUCT_NAME s_name
+#define DELIM ""
+#define NO_INTERNAL_GETENT
 
-enum nss_status
-_nss_econf_setservent (int stayopen __attribute__((__unused__)))
-{
-  enum nss_status status;
+#include "econf-XXX.c"
 
-  pthread_mutex_lock (&lock);
+DB_LOOKUP (servbyname, ':',
+           strlen (name) + 2 + (proto == NULL ? 0 : strlen (proto)),
+           ("%s/%s", name, proto ?: ""),
+           {
+             /* Must match both protocol (if specified) and name.  */
+             if (proto != NULL && strcmp (result->s_proto, proto))
+               /* A continue statement here breaks nss_db, because it
+                bypasses advancing to the next db entry, and it
+                doesn't make nss_files any more efficient.  */;
+             else
+               LOOKUP_NAME (s_name, s_aliases)
+           },
+           const char *name, const char *proto)
 
-  status = internal_setent (&global_data, DATABASE, "");
-
-  pthread_mutex_unlock (&lock);
-
-  return status;
-}
-
-
-enum nss_status
-_nss_econf_endservent (void)
-{
-  pthread_mutex_lock (&lock);
-
-  internal_endent (&global_data);
-
-  pthread_mutex_unlock (&lock);
-
-  return NSS_STATUS_SUCCESS;
-}
-
-
-enum nss_status
-_nss_econf_getservent_r (struct servent *result, char *buffer,
-			 size_t buflen, int *errnop)
-{
-  enum nss_status status = NSS_STATUS_SUCCESS;
-
-  pthread_mutex_lock (&lock);
-
-  if (global_data.key_file == NULL)
-    status = internal_setent (&global_data, DATABASE, "");
-
-  if (status == NSS_STATUS_SUCCESS)
-    status = internal_getent (&global_data, result, buffer, buflen, errnop);
-
-  pthread_mutex_unlock (&lock);
-
-  return status;
-}
-
-enum nss_status
-_nss_econf_getservbyname_r (const char *name, const char *proto,
-			    struct servent *result,
-			    char *buffer, size_t buflen, int *errnop)
-{
-  struct data_t local_data = {NULL, NULL, 0, 0};
-  enum nss_status status = internal_setent (&local_data, DATABASE, "");
-
-  if (status == NSS_STATUS_SUCCESS)
-    {
-      while ((status = internal_getent (&local_data, result, buffer, buflen, errnop)) == NSS_STATUS_SUCCESS)
-	{
-	  if (proto != NULL && strcmp (result->s_proto, proto))
-	    ;
-	  else
-	    {
-	      char **ap;
-	      if (! strcmp (name, result->s_name))
-		break;
-	      for (ap = result->s_aliases; *ap; ++ap)
-		if (! strcmp (name, *ap))
-		  break;
-	      if (*ap)
-		break;
-	    }
-	}
-      internal_endent (&local_data);
-    }
-
-  return status;
-}
-
-enum nss_status
-_nss_econf_getservbyport_r (int port, const char *proto, struct servent *result, char *buffer, size_t buflen, int *errnop)
-{
-  struct data_t local_data = {NULL, NULL, 0, 0};
-  enum nss_status status = internal_setent (&local_data, DATABASE, "");
-
-  if (status == NSS_STATUS_SUCCESS)
-    {
-      while ((status = internal_getent (&local_data, result, buffer, buflen, errnop)) == NSS_STATUS_SUCCESS)
-	{
-	  if (result->s_port == port && (proto == NULL || strcmp (result->s_proto, proto) == 0))
-	    break;
-	}
-      internal_endent (&local_data);
-    }
-  return status;
-}
+DB_LOOKUP (servbyport, '=', 21 + (proto ? strlen (proto) : 0),
+           ("%zd/%s", (ssize_t) ntohs (port), proto ?: ""),
+           {
+             /* Must match both port and protocol.  */
+             if (result->s_port == port
+                 && (proto == NULL
+                     || strcmp (result->s_proto, proto) == 0))
+               break;
+           }, int port, const char *proto)
