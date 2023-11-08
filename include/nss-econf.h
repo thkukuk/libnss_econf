@@ -45,6 +45,21 @@ extern enum nss_status _nss_econf_getaliasbyname_r (const char *name,
 		struct aliasent *result, char *buffer, size_t buflen,
 		int *errnop);
 
+extern enum nss_status _nss_econf_setnetent (int stayopen);
+extern enum nss_status _nss_econf_endnetent (void);
+extern enum nss_status _nss_econf_getnetent_r (struct netent *result,
+		char *buffer, size_t buflen, int *errnop, int *herrnop);
+extern enum nss_status _nss_econf_getnetbyname_r (const char *name,
+		struct netent *result, char *buffer, size_t buflen,
+		int *errnop, int *herrnop);
+extern enum nss_status _nss_econf_getnetbyaddr_r (uint32_t net, int type,
+		struct netent *result, char *buffer, size_t buflen,
+	        int *errnop , int *herrnop);
+
+extern enum nss_status _nss_econf_getnetbyname_r (const char *name,
+		struct netent *result, char *buffer, size_t buflen,
+		int *errnop, int *herrnop);
+
 extern enum nss_status _nss_econf_setprotoent (int stayopen);
 extern enum nss_status _nss_econf_endprotoent (void);
 extern enum nss_status _nss_econf_getprotoent_r (struct protoent *result,

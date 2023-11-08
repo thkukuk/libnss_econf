@@ -92,17 +92,24 @@ internal_getent (struct data_t *data, struct STRUCTURE *result,
   int saved_errno = errno;	/* Do not clobber errno on success.  */
 
   if (data->key_file == NULL || data->key_number == 0)
-    /* No entry */
-    return NSS_STATUS_NOTFOUND;
+    {
+      /* No entry */
+      H_ERRNO_SET (HOST_NOT_FOUND);
+      return NSS_STATUS_NOTFOUND;
+    }
 
   if (data->next_key >= data->key_number)
-    /* All entries returned */
-    return NSS_STATUS_NOTFOUND;
+    {
+      /* All entries returned */
+      H_ERRNO_SET (HOST_NOT_FOUND);
+      return NSS_STATUS_NOTFOUND;
+    }
 
   size_t keylen = strlen (data->keys[data->next_key]);
   if ((keylen + 1) > buflen)
     {
       *errnop = ERANGE;
+      H_ERRNO_SET (NETDB_INTERNAL);
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -118,6 +125,7 @@ internal_getent (struct data_t *data, struct STRUCTURE *result,
   if ((strlen (val) + 1) > buflen)
     {
       *errnop = ERANGE;
+      H_ERRNO_SET (NETDB_INTERNAL);
       return NSS_STATUS_TRYAGAIN;
     }
 
@@ -149,7 +157,8 @@ CONCAT(_nss_econf_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
     status = internal_setent (&global_data, DATABASE, DELIM);
 
   if (status == NSS_STATUS_SUCCESS)
-    status = internal_getent (&global_data, result, buffer, buflen, errnop);
+    status = internal_getent (&global_data, result, buffer, buflen, 
+		              errnop H_ERRNO_ARG);
 
   pthread_mutex_unlock (&lock);
 
@@ -180,7 +189,7 @@ _nss_econf_get##name##_r (proto,					      \
   if (status == NSS_STATUS_SUCCESS)                                           \
     {                                                                         \
       while ((status = internal_getent (&local_data, result, buffer,          \
-					buflen, errnop))                      \
+					buflen, errnop H_ERRNO_ARG))          \
 	     == NSS_STATUS_SUCCESS)                                           \
 	{ break_if_match }                                                    \
                                                                               \

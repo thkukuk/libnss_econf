@@ -317,10 +317,10 @@ parse_list (char **linep, char *eol, char *buf_end, int terminator_c,
 #define LOOKUP_NAME_CASE(nameelt, aliaselt)				      \
 {									      \
   char **ap;								      \
-  if (! __strcasecmp (name, result->nameelt))				      \
+  if (! strcasecmp (name, result->nameelt))				      \
     break;								      \
   for (ap = result->aliaselt; *ap; ++ap)				      \
-    if (! __strcasecmp (name, *ap))					      \
+    if (! strcasecmp (name, *ap))					      \
       break;								      \
   if (*ap)								      \
     break;								      \

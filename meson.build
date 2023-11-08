@@ -50,6 +50,7 @@ add_project_arguments(cc.get_supported_arguments(possible_cc_flags), language : 
 libnss_econf_src = files(
   'src/aliases.c',
   'src/internal.c',
+  'src/networks.c',
   'src/proto.c',
   'src/rpc.c',
   'src/services.c',
