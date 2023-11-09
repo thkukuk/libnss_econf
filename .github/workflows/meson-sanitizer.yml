@@ -7,6 +7,8 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+    - name: Show OS variant
+      run: grep ^PRETTY_NAME /etc/os-release
     - name: Install libeconf-devel
       run: sudo apt-get install libeconf-dev
     - uses: actions/checkout@v3
