@@ -59,7 +59,7 @@ libnss_econf_src = files(
 mapfile = 'src/libnss_econf.map'
 version_flag = '-Wl,--version-script,@0@/@1@'.format(meson.current_source_dir(), mapfile)
 
-libeconf_dep = dependency('libeconf')
+libeconf_dep = dependency('libeconf', version : '>= 0.4.9')
 
 lib = library(
   'nss_econf',
