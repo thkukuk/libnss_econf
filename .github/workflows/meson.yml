@@ -10,15 +10,37 @@ jobs:
     - name: Show OS variant
       run: grep ^PRETTY_NAME /etc/os-release
     - name: Install libeconf-devel
-      run: sudo apt-get install libeconf-dev
-    - uses: actions/checkout@v3
-    - uses: BSFishy/meson-build@v1.0.3
+      run: |
+        sudo apt-get update
+        sudo apt-get install libeconf-dev meson
+    - name: Checkout libeconf
+      uses: actions/checkout@v4
+      with:
+        repository: openSUSE/libeconf
+    - name:
+      uses: BSFishy/meson-build@v1.0.3
       with:
         action: build
+        directory: build
+        setup-options: --prefix=/usr
+        meson-version: 0.61.4
+    - name: Install libeconf
+      run: sudo meson install -C build
+    - name: Cleanup libeconf
+      run: rm -rf .git *
+    - name: Checkout libnss_econf
+      uses: actions/checkout@v4
+    - name: Build libnss_econf
+      uses: BSFishy/meson-build@v1.0.3
+      with:
+        action: build
+        directory: build
         options: --verbose
         meson-version: 0.61.4
-    - uses: BSFishy/meson-build@v1.0.3
+    - name: Test libnss_econf
+      uses: BSFishy/meson-build@v1.0.3
       with:
         action: test
+        directory: build
         options: --verbose
         meson-version: 0.61.4
