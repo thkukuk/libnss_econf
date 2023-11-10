@@ -7,6 +7,14 @@ test('tst-getaliasent_r', tst_getaliasent_r_exe)
 tst_getaliasbyname_r_exe = executable('tst-getaliasbyname_r', 'tst-getaliasbyname_r.c', dependencies : libnss_econf_dep)
 test('tst-getaliasbyname_r', tst_getaliasbyname_r_exe)
 
+# networks
+tst_getnetent_r_exe = executable('tst-getnetent_r', 'tst-getnetent_r.c', dependencies : libnss_econf_dep)
+test('tst-getnetent_r', tst_getnetent_r_exe)
+tst_getnetbyname_r_exe = executable('tst-getnetbyname_r', 'tst-getnetbyname_r.c', dependencies : libnss_econf_dep)
+test('tst-getnetbyname_r', tst_getnetbyname_r_exe)
+tst_getnetbyaddr_r_exe = executable('tst-getnetbyaddr_r', 'tst-getnetbyaddr_r.c', dependencies : libnss_econf_dep)
+test('tst-getnetbyaddr_r', tst_getnetbyaddr_r_exe)
+
 # protocols (proto)
 tst_getprotoent_r_exe = executable('tst-getprotoent_r', 'tst-getprotoent_r.c', dependencies : libnss_econf_dep)
 test('tst-getprotoent_r', tst_getprotoent_r_exe)

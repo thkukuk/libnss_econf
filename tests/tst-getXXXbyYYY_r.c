@@ -45,6 +45,13 @@
 # define SECOND_ARG
 #endif
 
+#ifdef NEED_H_ERRNO
+# define H_ERRNO_ARG    , &herrnop
+#else
+# define H_ERRNO_ARG
+#endif
+
+
 #define MAX_BUF 4096
 
 static int
@@ -54,11 +61,15 @@ query (FIRST_PROTO SECOND_PROTO)
   char buf[MAX_BUF] = "";
   size_t buflen = MAX_BUF;
   int errnop;
+#ifdef NEED_H_ERRNO
+  int herrnop;
+#endif
+  enum nss_status retval;
 
   PRINT_ARGS
 
-  int retval = CONCAT(_nss_econf_get,SERVICE_r) (FIRST_ARG SECOND_ARG, &res_buf,
-						 buf, buflen, &errnop);
+  retval = CONCAT(_nss_econf_get,SERVICE_r) (FIRST_ARG SECOND_ARG, &res_buf,
+					     buf, buflen, &errnop H_ERRNO_ARG);
 
   if (retval != NSS_STATUS_SUCCESS)
     {

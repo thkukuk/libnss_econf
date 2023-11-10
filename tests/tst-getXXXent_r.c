@@ -32,6 +32,12 @@
 
 #define ENTNAME_r       CONCAT(ENTNAME,_r)
 
+#ifdef NEED_H_ERRNO
+# define H_ERRNO_ARG    , &herrnop
+#else
+# define H_ERRNO_ARG
+#endif
+
 #define MAX_BUF 4096
 
 int
@@ -41,6 +47,9 @@ main(void)
   size_t buflen = MAX_BUF;
   struct STRUCTURE *result = NULL;
   int errnop;
+#ifdef NEED_H_ERRNO
+  int herrnop;
+#endif
   enum nss_status retval;
 
   if ((retval = CONCAT(_nss_econf_set,ENTNAME)(-1)) != NSS_STATUS_SUCCESS)
@@ -56,7 +65,8 @@ main(void)
 
   do {
     struct STRUCTURE res_buf;
-    retval = CONCAT(_nss_econf_get,ENTNAME_r) (&res_buf, buf, buflen, &errnop);
+    retval = CONCAT(_nss_econf_get,ENTNAME_r) (&res_buf, buf, buflen,
+					       &errnop H_ERRNO_ARG);
 
     if (retval != NSS_STATUS_SUCCESS)
       {
