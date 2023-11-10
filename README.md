@@ -4,12 +4,22 @@ This is a NSS module for glibc which can read several databases like
 `services` or `rpc` from different places on the filesystem and merge
 them to one.
 
-It follows the [Configuration Files Specification](https://github.com/uapi-group/specifications/blob/main/specs/configuration_files_specification.md) of the 
+It follows the [Configuration Files Specification](https://github.com/uapi-group/specifications/blob/main/specs/configuration_files_specification.md) of the
 [Linux Userspace API Group](https://uapi-group.org/).
+
+## Supported Services
+
+The following services are supported:
+
+  * **aliases** - Mail aliases, used by [getaliasent(3)](https://manpages.opensuse.org/getaliasent.3) and related functions.
+  * **networks** - Network names and numbers, used by [getnetent(3)](https://manpages.opensuse.org/getnetent.3) and related functions.
+  * **protocols** - Network protocols, used by [getprotoent(3)](https://manpages.opensuse.org/getprotoent.3) and related functions.
+  * **rpc** - Remote procedure call names and numbers, used by [getrpcent(3)](https://manpages.opensuse.org/getrpcent.3) and related functions.
+  * **services** -  Network services, used by [getservent(3)](https://manpages.opensuse.org/getservent.3) and related functions.
 
 ## Usage
 
-List the module in the `nsswitch.conf` configuration file.
+List the module in the [nsswitch.conf](https://manpages.opensuse.org/nsswitch.conf) configuration file.
 For example:
 
 ```
@@ -17,7 +27,7 @@ For example:
     group:      compat systemd
 
     hosts:      files dns
-    networks:   files dns
+    networks:   econf
 
     aliases:    econf
     ethers:     files usrfiles
@@ -35,11 +45,10 @@ For example:
 
 ## Building and installing libnss_econf
 
-There is one option to build it: meson
-
 ### Building
 
-libnss_econf requires a relatively recent version of meson, version 0.58 or newer.
+libnss_econf requires [libeconf](https://manpages.opensuse.org/libeconf) in
+version 0.4.9 or newer and meson version 0.58 or newer.
 
 Building with meson is quite simple:
 
@@ -57,13 +66,6 @@ If you want to build with the address sanitizer enabled, add
 ```shell
 $ sudo meson install -C build
 ```
-
-### Tagging new Release
-
-1. Edit NEWS declaring the new version number and making all the changes to it.
-2. Update the version number in meson.build.
-3. Commit to git.
-4. 'Draft a new release' on github.
 
 ## Licensing
 
