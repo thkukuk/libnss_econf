@@ -5,6 +5,12 @@ NSS_ECONF_PRIVATE_2.0 {
     _nss_econf_getaliasent_r;
     _nss_econf_setaliasent;
 
+    _nss_econf_endgrent;
+    _nss_econf_getgrnam_r;
+    _nss_econf_getgrgid_r;
+    _nss_econf_getgrent_r;
+    _nss_econf_setgrent;
+
     _nss_econf_endnetent;
     _nss_econf_getnetbyaddr_r;
     _nss_econf_getnetbyname_r;
@@ -16,6 +22,12 @@ NSS_ECONF_PRIVATE_2.0 {
     _nss_econf_getservbyport_r;
     _nss_econf_getservent_r;
     _nss_econf_setservent;
+
+    _nss_econf_endpwent;
+    _nss_econf_getpwnam_r;
+    _nss_econf_getpwuid_r;
+    _nss_econf_getpwent_r;
+    _nss_econf_setpwent;
 
     _nss_econf_endrpcent;
     _nss_econf_getrpcbyname_r;

@@ -21,6 +21,8 @@
 #include <aliases.h>
 #include <nss.h>
 #include <netdb.h>
+#include <grp.h>
+#include <pwd.h>
 #include <libeconf.h>
 
 struct data_t
@@ -44,6 +46,17 @@ extern enum nss_status _nss_econf_getaliasent_r (struct aliasent *result,
 extern enum nss_status _nss_econf_getaliasbyname_r (const char *name,
 		struct aliasent *result, char *buffer, size_t buflen,
 		int *errnop);
+
+extern enum nss_status _nss_econf_setgrent (int stayopen);
+extern enum nss_status _nss_econf_endgrent (void);
+extern enum nss_status _nss_econf_getgrent_r (struct group *result,
+                char *buffer, size_t buflen, int *errnop);
+extern enum nss_status _nss_econf_getgrnam_r (const char *name,
+                struct group *result, char *buffer, size_t buflen,
+                int *errnop);
+extern enum nss_status _nss_econf_getgrgid_r (gid_t gid,
+                struct group *result, char *buffer, size_t buflen,
+                int *errnop);
 
 extern enum nss_status _nss_econf_setnetent (int stayopen);
 extern enum nss_status _nss_econf_endnetent (void);
@@ -69,6 +82,17 @@ extern enum nss_status _nss_econf_getprotobyname_r (const char *name,
 		int *errnop);
 extern enum nss_status _nss_econf_getprotobynumber_r (int proto,
 		struct protoent *result, char *buffer, size_t buflen,
+		int *errnop);
+
+extern enum nss_status _nss_econf_setpwent (int stayopen);
+extern enum nss_status _nss_econf_endpwent (void);
+extern enum nss_status _nss_econf_getpwent_r (struct passwd *result,
+		char *buffer, size_t buflen, int *errnop);
+extern enum nss_status _nss_econf_getpwnam_r (const char *name,
+		struct passwd *result, char *buffer, size_t buflen,
+	        int *errnop);
+extern enum nss_status _nss_econf_getpwuid_r (uid_t uid,
+		struct passwd *result, char *buffer, size_t buflen,
 		int *errnop);
 
 extern enum nss_status _nss_econf_setrpcent (int stayopen);

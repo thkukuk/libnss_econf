@@ -12,7 +12,9 @@ It follows the [Configuration Files Specification](https://github.com/uapi-group
 The following services are supported:
 
   * **aliases** - Mail aliases, used by [getaliasent(3)](https://manpages.opensuse.org/getaliasent.3) and related functions.
+  * **group** - Groups of users, used by [getgrent(3)](https://manpages.opensuse.org/getgrent.3) and related functions.
   * **networks** - Network names and numbers, used by [getnetent(3)](https://manpages.opensuse.org/getnetent.3) and related functions.
+  * **passwd** - User passwords, used by [getpwent(3)](https://manpages.opensuse.org/getpwent.3) and related functions.
   * **protocols** - Network protocols, used by [getprotoent(3)](https://manpages.opensuse.org/getprotoent.3) and related functions.
   * **rpc** - Remote procedure call names and numbers, used by [getrpcent(3)](https://manpages.opensuse.org/getrpcent.3) and related functions.
   * **services** -  Network services, used by [getservent(3)](https://manpages.opensuse.org/getservent.3) and related functions.
