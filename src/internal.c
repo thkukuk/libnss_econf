@@ -46,7 +46,12 @@ internal_setent_nokeys (struct data_t *data, const char *database,
       econf_err error = econf_readDirs (&(data->key_file), USRDIR, "/etc",
 					database, NULL, delim, "#");
       if (error)
-	return NSS_STATUS_UNAVAIL;
+	{
+	  if (error == ECONF_NOFILE)
+	    return NSS_STATUS_NOTFOUND;
+	  else
+	    return NSS_STATUS_UNAVAIL;
+	}
 
       data->keys = NULL;
       data->next_key = 0;
