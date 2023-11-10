@@ -15,63 +15,38 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#define SERVICE alias
 
-#include "nss-econf.h"
+#define PRINT_ARGS printf ("query: [%s]\n", name);
 
-#define MAX_BUF 4096
+#define PRINT_RESULT \
+        printf ("[%s] aliases[%li]=",                              \
+                result->alias_name, result->alias_members_len);    \
+        if (result->alias_members)                                 \
+          for (char **p = result->alias_members; *p != NULL; p++)  \
+            printf("[%s] ", *p);                                   \
+        printf("\n");
 
-static int
-query_alias (const char *name)
-{
-  struct aliasent res_buf = {NULL, 0, NULL, 0};
-  char buf[MAX_BUF] = "";
-  size_t buflen = MAX_BUF;
-  int errnop;
-
-  int retval = _nss_econf_getaliasbyname_r (name, &res_buf,
-					    buf, buflen, &errnop);
-
-  if (retval != NSS_STATUS_SUCCESS)
-    {
-      if (errnop == ERANGE)
-	fprintf (stderr, "Buffer(%li) too small\n", buflen);
-      else
-	fprintf (stderr, "Retval = %i\n", retval);
-    }
-  else
-    {
-      struct aliasent *result = &res_buf;
-
-      printf ("alias_name=%s; members=%li; aliases=",
-	      result->alias_name, result->alias_members_len);
-      if (result->alias_members)
-	for (char **p = result->alias_members; *p != NULL; p++)
-	  printf("%s ", *p);
-      printf("\n");
-    }
-
-  return retval;
-}
+#include "tst-getXXXbyYYY_r.c"
 
 int
 main(void)
 {
   int retval;
 
-  retval = query_alias ("postmaster");
+  /* Ubuntu has no alias file */
+  if (_nss_econf_setaliasent (-1) == NSS_STATUS_NOTFOUND)
+    return 77;
+
+  retval = query ("postmaster");
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_alias ("daemon");
+  retval = query ("daemon");
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_alias ("doesnotexist");
+  retval = query ("doesnotexist");
   if (retval != NSS_STATUS_NOTFOUND)
     return 1;
 

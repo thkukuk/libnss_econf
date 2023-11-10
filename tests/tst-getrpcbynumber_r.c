@@ -15,68 +15,41 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <arpa/inet.h>
+#define SERVICE rpc
+#define SERVICE_r rpcbynumber_r
 
-#include "nss-econf.h"
+#define FIRST_PROTO int number
+#define FIRST_ARG   number
 
-#define MAX_BUF 4096
+#define PRINT_ARGS printf ("query: [%i]\n", number);
 
-static int
-query_rpc (long number)
-{
-  struct rpcent res_buf = {NULL, NULL, 0};
-  char buf[MAX_BUF] = "";
-  size_t buflen = MAX_BUF;
-  int errnop;
+#define PRINT_RESULT \
+        printf("[%s] [%d]", result->r_name, result->r_number); \
+        if (result->r_aliases)                                 \
+          for (char **p = result->r_aliases; *p != NULL; p++)  \
+            printf(" [%s]", *p);                               \
+        printf("\n");
 
-  int retval = _nss_econf_getrpcbynumber_r (number, &res_buf,
-					    buf, buflen, &errnop);
-
-  if (retval != NSS_STATUS_SUCCESS)
-    {
-      if (errnop == ERANGE)
-	fprintf (stderr, "Buffer(%li) too small\n", buflen);
-      else
-	fprintf (stderr, "Retval = %i\n", retval);
-    }
-  else
-    {
-      struct rpcent *result = &res_buf;
-
-      printf("r_name=%s; r_number=%i; aliases=",
-	     result->r_name, result->r_number);
-      if (result->r_aliases)
-	for (char **p = result->r_aliases; *p != NULL; p++)
-	  printf("%s ", *p);
-      printf("\n");
-    }
-
-  return retval;
-}
+#include "tst-getXXXbyYYY_r.c"
 
 int
 main(void)
 {
   int retval;
 
-  retval = query_rpc (100000);
+  retval = query (100000);
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_rpc (100009);
+  retval = query (100009);
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_rpc (100069);
+  retval = query (100069);
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_rpc (0);
+  retval = query (0);
   if (retval != NSS_STATUS_NOTFOUND)
     return 1;
 

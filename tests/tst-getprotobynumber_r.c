@@ -15,68 +15,41 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <arpa/inet.h>
+#define SERVICE proto
+#define SERVICE_r protobynumber_r
 
-#include "nss-econf.h"
+#define FIRST_PROTO int proto
+#define FIRST_ARG   proto
 
-#define MAX_BUF 4096
+#define PRINT_ARGS printf ("query: [%i]\n", proto);
 
-static int
-query_proto (long number)
-{
-  struct protoent res_buf = {NULL, NULL, 0};
-  char buf[MAX_BUF] = "";
-  size_t buflen = MAX_BUF;
-  int errnop;
+#define PRINT_RESULT \
+        printf("[%s] [%d]", result->p_name, result->p_proto);  \
+        if (result->p_aliases)                                 \
+          for (char **p = result->p_aliases; *p != NULL; p++)  \
+            printf(" [%s]", *p);                               \
+        printf("\n");
 
-  int retval = _nss_econf_getprotobynumber_r (number, &res_buf,
-					    buf, buflen, &errnop);
-
-  if (retval != NSS_STATUS_SUCCESS)
-    {
-      if (errnop == ERANGE)
-	fprintf (stderr, "Buffer(%li) too small\n", buflen);
-      else
-	fprintf (stderr, "Retval = %i\n", retval);
-    }
-  else
-    {
-      struct protoent *result = &res_buf;
-
-      printf("p_name=%s; p_number=%i; aliases=",
-	     result->p_name, result->p_proto);
-      if (result->p_aliases)
-	for (char **p = result->p_aliases; *p != NULL; p++)
-	  printf("%s ", *p);
-      printf("\n");
-    }
-
-  return retval;
-}
+#include "tst-getXXXbyYYY_r.c"
 
 int
 main(void)
 {
   int retval;
 
-  retval = query_proto (4);
+  retval = query (4);
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_proto (41);
+  retval = query (41);
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_proto (58);
+  retval = query (58);
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_proto (200);
+  retval = query (200);
   if (retval != NSS_STATUS_NOTFOUND)
     return 1;
 

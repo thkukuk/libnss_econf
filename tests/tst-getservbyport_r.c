@@ -15,69 +15,45 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <arpa/inet.h>
+#define SERVICE serv
+#define SERVICE_r servbyport_r
 
-#include "nss-econf.h"
+#define FIRST_PROTO  int port
+#define FIRST_ARG    ntohs(port)
+#define SECOND_PROTO , const char *proto
+#define SECOND_ARG   , proto
 
-#define MAX_BUF 4096
+#define PRINT_ARGS printf ("query: [%i,%s]\n", port, proto);
 
-static int
-query_services (int port, const char *proto)
-{
-  struct servent res_buf = {NULL, NULL, 0, NULL};
-  char buf[MAX_BUF] = "";
-  size_t buflen = MAX_BUF;
-  int errnop;
+#define PRINT_RESULT \
+        printf("[%s] [%s/%d]",                                    \
+               result->s_name, result->s_proto,                   \
+               ntohs(result->s_port));                            \
+        if (result->s_aliases)                                    \
+          for (char **p = result->s_aliases; *p != NULL; p++)     \
+            printf(" [%s]", *p);                                  \
+        printf("\n");
 
-  int retval = _nss_econf_getservbyport_r (ntohs(port), proto, &res_buf,
-					   buf, buflen, &errnop);
-
-  if (retval != NSS_STATUS_SUCCESS)
-    {
-      if (errnop == ERANGE)
-	fprintf (stderr, "Buffer(%li) too small\n", buflen);
-      else
-	fprintf (stderr, "Retval = %i\n", retval);
-    }
-  else
-    {
-      struct servent *result = &res_buf;
-
-      printf("s_name=%s; s_proto=%s; s_port=%d; aliases=",
-	     result->s_name, result->s_proto,
-	     ntohs(result->s_port));
-      if (result->s_aliases)
-	for (char **p = result->s_aliases; *p != NULL; p++)
-	  printf("%s ", *p);
-      printf("\n");
-    }
-
-  return retval;
-}
+#include "tst-getXXXbyYYY_r.c"
 
 int
 main(void)
 {
   int retval;
 
-  retval = query_services (111, NULL);
+  retval = query (111, NULL);
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_services (111, "tcp");
+  retval = query (111, "tcp");
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_services (111, "udp");
+  retval = query (111, "udp");
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query_services (111, "none");
+  retval = query (111, "none");
   if (retval != NSS_STATUS_NOTFOUND)
     return 1;
 
