@@ -17,10 +17,6 @@ conf = configuration_data()
 conf.set_quoted('USRDIR', get_option('usr-dir'))
 conf.set('_GNU_SOURCE', 1)
 
-config_h = configure_file(
-	         output : 'config.h',
-        	 configuration : conf)
-
 cc = meson.get_compiler('c')
 pkg = import('pkgconfig')
 inc = include_directories('include')
@@ -61,6 +57,10 @@ version_flag = '-Wl,--version-script,@0@/@1@'.format(meson.current_source_dir(),
 
 libeconf_dep = dependency('libeconf', version : '>= 0.4.9')
 
+if cc.has_function('econf_readConfig', prefix : '#include <libeconf.h>')
+  conf.set('HAVE_ECONF_READCONFIG', 1)
+endif
+
 lib = library(
   'nss_econf',
   libnss_econf_src,
@@ -84,6 +84,10 @@ libnss_econf_dep = declare_dependency(
   link_with : lib,
   include_directories : inc,
 )
+
+config_h = configure_file(
+                 output : 'config.h',
+                 configuration : conf)
 
 # Unit tests
 subdir('tests')
