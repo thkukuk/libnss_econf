@@ -15,6 +15,16 @@ test('tst-getnetbyname_r', tst_getnetbyname_r_exe)
 tst_getnetbyaddr_r_exe = executable('tst-getnetbyaddr_r', 'tst-getnetbyaddr_r.c', dependencies : libnss_econf_dep)
 test('tst-getnetbyaddr_r', tst_getnetbyaddr_r_exe)
 
+# passwd
+tst_getpwent_r_exe = executable('tst-getpwent_r', 'tst-getpwent_r.c', dependencies : libnss_econf_dep)
+test('tst-getpwent_r', tst_getpwent_r_exe)
+
+tst_getpwnam_r_exe = executable('tst-getpwnam_r', 'tst-getpwnam_r.c', dependencies : libnss_econf_dep)
+test('tst-getpwnam_r', tst_getpwnam_r_exe)
+
+tst_getpwuid_r_exe = executable('tst-getpwuid_r', 'tst-getpwuid_r.c', dependencies : libnss_econf_dep)
+test('tst-getpwuid_r', tst_getpwuid_r_exe)
+
 # protocols (proto)
 tst_getprotoent_r_exe = executable('tst-getprotoent_r', 'tst-getprotoent_r.c', dependencies : libnss_econf_dep)
 test('tst-getprotoent_r', tst_getprotoent_r_exe)
