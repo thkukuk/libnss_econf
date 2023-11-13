@@ -44,7 +44,7 @@ main(void)
 
   retval = query ("rpcbind", NULL);
   if (retval != NSS_STATUS_SUCCESS)
-    return 1;
+    return 77; /* Hack, Ubuntu misses rpcbind */
 
   retval = query ("sunrpc", "tcp");
   if (retval != NSS_STATUS_SUCCESS)
