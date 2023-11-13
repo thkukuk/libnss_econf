@@ -23,6 +23,7 @@
 #include <netdb.h>
 #include <grp.h>
 #include <pwd.h>
+#include <shadow.h>
 #include <libeconf.h>
 
 struct data_t
@@ -135,5 +136,13 @@ extern enum nss_status _nss_econf_getservbyname_r (const char *name,
 						   char *buffer,
 						   size_t buflen,
 						   int *errnop);
+
+extern enum nss_status _nss_econf_setspent (int stayopen);
+extern enum nss_status _nss_econf_endspent (void);
+extern enum nss_status _nss_econf_getspent_r (struct spwd *result,
+		char *buffer, size_t buflen, int *errnop);
+extern enum nss_status _nss_econf_getspnam_r (const char *name,
+		struct spwd *result, char *buffer, size_t buflen,
+	        int *errnop);
 
 #endif

@@ -35,6 +35,11 @@ NSS_ECONF_PRIVATE_2.0 {
     _nss_econf_getrpcent_r;
     _nss_econf_setrpcent;
 
+    _nss_econf_endspent;
+    _nss_econf_getspnam_r;
+    _nss_econf_getspent_r;
+    _nss_econf_setspent;
+
     _nss_econf_endprotoent;
     _nss_econf_getprotobyname_r;
     _nss_econf_getprotobynumber_r;

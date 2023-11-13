@@ -64,3 +64,10 @@ test('tst-getservbyname_r', tst_getservbyname_r_exe)
 
 tst_getservbyport_r_exe = executable('tst-getservbyport_r', 'tst-getservbyport_r.c', dependencies : libnss_econf_dep)
 test('tst-getservbyport_r', tst_getservbyport_r_exe)
+
+# shadow
+tst_getspent_r_exe = executable('tst-getspent_r', 'tst-getspent_r.c', dependencies : libnss_econf_dep)
+test('tst-getspent_r', tst_getspent_r_exe)
+
+tst_getspnam_r_exe = executable('tst-getspnam_r', 'tst-getspnam_r.c', dependencies : libnss_econf_dep)
+test('tst-getspnam_r', tst_getspnam_r_exe)

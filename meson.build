@@ -52,6 +52,7 @@ libnss_econf_src = files(
   'src/proto.c',
   'src/rpc.c',
   'src/services.c',
+  'src/shadow.c'
 )
 
 mapfile = 'src/libnss_econf.map'
