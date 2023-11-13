@@ -7,6 +7,16 @@ test('tst-getaliasent_r', tst_getaliasent_r_exe)
 tst_getaliasbyname_r_exe = executable('tst-getaliasbyname_r', 'tst-getaliasbyname_r.c', dependencies : libnss_econf_dep)
 test('tst-getaliasbyname_r', tst_getaliasbyname_r_exe)
 
+# group
+tst_getgrent_r_exe = executable('tst-getgrent_r', 'tst-getgrent_r.c', dependencies : libnss_econf_dep)
+test('tst-getgrent_r', tst_getgrent_r_exe)
+
+tst_getgrnam_r_exe = executable('tst-getgrnam_r', 'tst-getgrnam_r.c', dependencies : libnss_econf_dep)
+test('tst-getgrnam_r', tst_getgrnam_r_exe)
+
+tst_getgrgid_r_exe = executable('tst-getgrgid_r', 'tst-getgrgid_r.c', dependencies : libnss_econf_dep)
+test('tst-getgrgid_r', tst_getgrgid_r_exe)
+
 # networks
 tst_getnetent_r_exe = executable('tst-getnetent_r', 'tst-getnetent_r.c', dependencies : libnss_econf_dep)
 test('tst-getnetent_r', tst_getnetent_r_exe)
