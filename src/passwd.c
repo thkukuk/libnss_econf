@@ -45,11 +45,7 @@ LINE_PARSER
 #include "econf-XXX.c"
 
 
-DB_LOOKUP (pwnam, '.', 0, ("%s", name),
-           {
-             if (! strcmp (name, result->pw_name))
-               break;
-           }, const char *name)
+DB_LOOKUP_KEY (pwnam, name)
 
 DB_LOOKUP (pwuid, '=', 20, ("%lu", (unsigned long int) uid),
            {

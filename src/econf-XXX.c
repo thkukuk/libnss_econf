@@ -142,6 +142,58 @@ internal_getent (struct data_t *data, struct STRUCTURE *result,
 
   return NSS_STATUS_SUCCESS;
 }
+
+static enum nss_status
+internal_getkey (struct data_t *data, const char *key,
+		 struct STRUCTURE *result, char *buffer, size_t buflen,
+		 int *errnop H_ERRNO_PROTO EXTRA_ARGS_DECL)
+{
+  int saved_errno = errno;	/* Do not clobber errno on success.  */
+
+  if (data->key_file == NULL)
+    {
+      /* No entry */
+      H_ERRNO_SET (HOST_NOT_FOUND);
+      return NSS_STATUS_NOTFOUND;
+    }
+
+  size_t keylen = strlen (key);
+  if ((keylen + 1) > buflen)
+    {
+      *errnop = ERANGE;
+      H_ERRNO_SET (NETDB_INTERNAL);
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  result->STRUCT_NAME = buffer;
+  strcpy (result->STRUCT_NAME, key);
+  buflen = buflen - keylen - 1;
+  buffer = &buffer[keylen + 1];
+
+  char *val = NULL;
+  if (econf_getStringValue (data->key_file, NULL, result->STRUCT_NAME, &val))
+    return NSS_STATUS_NOTFOUND;
+
+  if ((strlen (val) + 1) > buflen)
+    {
+      *errnop = ERANGE;
+      H_ERRNO_SET (NETDB_INTERNAL);
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  strcpy (buffer, val);
+  free (val);
+
+  struct parser_data *pdata = (void *) buffer;
+  if (CONCAT(_nss_files_parse_,ENTNAME) (buffer, result, pdata, buflen, errnop) == -1)
+    return NSS_STATUS_TRYAGAIN;
+
+  data->next_key++;
+
+  errno = saved_errno;
+
+  return NSS_STATUS_SUCCESS;
+}
 #endif
 
 /* Return the next entry from the database file, doing locking.  */
@@ -157,7 +209,7 @@ CONCAT(_nss_econf_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
     status = internal_setent (&global_data, DATABASE, DELIM);
 
   if (status == NSS_STATUS_SUCCESS)
-    status = internal_getent (&global_data, result, buffer, buflen, 
+    status = internal_getent (&global_data, result, buffer, buflen,
 		              errnop H_ERRNO_ARG);
 
   pthread_mutex_unlock (&lock);
@@ -192,6 +244,26 @@ _nss_econf_get##name##_r (proto,					      \
 					buflen, errnop H_ERRNO_ARG))          \
 	     == NSS_STATUS_SUCCESS)                                           \
 	{ break_if_match }                                                    \
+                                                                              \
+      internal_endent (&local_data);                                          \
+    }									      \
+									      \
+  return status;							      \
+}
+
+#define DB_LOOKUP_KEY(fct_name, key)			                      \
+enum nss_status								      \
+_nss_econf_get##fct_name##_r (const char *key, 				      \
+			      struct STRUCTURE *result, char *buffer,	      \
+			      size_t buflen, int *errnop H_ERRNO_PROTO)	      \
+{									      \
+  struct data_t local_data = {NULL, NULL, 0, 0};                              \
+  enum nss_status status = internal_setent_nokeys (&local_data, DATABASE, DELIM);\
+                                                                              \
+  if (status == NSS_STATUS_SUCCESS)                                           \
+    {                                                                         \
+      status = internal_getkey (&local_data, key, result, buffer,	      \
+				buflen, errnop H_ERRNO_ARG);		      \
                                                                               \
       internal_endent (&local_data);                                          \
     }									      \

@@ -39,11 +39,7 @@ LINE_PARSER
 
 #include "econf-XXX.c"
 
-DB_LOOKUP (grnam, '.', 0, ("%s", name),
-           {
-             if (! strcmp (name, result->gr_name))
-               break;
-           }, const char *name)
+DB_LOOKUP_KEY (grnam, name)
 
 DB_LOOKUP (grgid, '=', 20, ("%lu", (unsigned long int) gid),
            {
