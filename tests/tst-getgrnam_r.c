@@ -42,7 +42,7 @@ main(void)
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
-  retval = query ("nobody");
+  retval = query ("nogroup");
   if (retval != NSS_STATUS_SUCCESS)
     return 1;
 
