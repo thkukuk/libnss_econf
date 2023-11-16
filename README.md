@@ -7,7 +7,9 @@ them to one.
 It follows the [Configuration Files Specification](https://github.com/uapi-group/specifications/blob/main/specs/configuration_files_specification.md) of the
 [Linux Userspace API Group](https://uapi-group.org/).
 
-## Supported Services
+This module can be used as a 1:1 replacement of the libnss_files module from glibc.
+
+## Services
 
 The following services are supported:
 
@@ -17,7 +19,15 @@ The following services are supported:
   * **passwd** - User passwords, used by [getpwent(3)](https://manpages.opensuse.org/getpwent.3) and related functions.
   * **protocols** - Network protocols, used by [getprotoent(3)](https://manpages.opensuse.org/getprotoent.3) and related functions.
   * **rpc** - Remote procedure call names and numbers, used by [getrpcent(3)](https://manpages.opensuse.org/getrpcent.3) and related functions.
-  * **services** -  Network services, used by [getservent(3)](https://manpages.opensuse.org/getservent.3) and related functions.
+  * **services** - Network services, used by [getservent(3)](https://manpages.opensuse.org/getservent.3) and related functions.
+  * **shadow** - Shadow user passwords, used by [getspnam(3)](https://manpages.opensuse.org/getspnam.3) and related functions.
+
+
+For **group**, **passwd** and **shadow** the +/- entries are not supported.
+
+Keys in the maps needs to be unique, if several entries in a file have the same name, it's undefined which one will be returned.
+
+Not supported are *ethers*, *initgroups*, *netgroup* and *publickey*.
 
 ## Usage
 
@@ -25,14 +35,14 @@ List the module in the [nsswitch.conf](https://manpages.opensuse.org/nsswitch.co
 For example:
 
 ```
-    passwd:     compat systemd
-    group:      compat systemd
+    passwd:     econf systemd
+    group:      econf systemd
 
     hosts:      files dns
     networks:   econf
 
     aliases:    econf
-    ethers:     files usrfiles
+    ethers:     files
     netgroup:   files
     protocols:  econf
     publickey:  files
