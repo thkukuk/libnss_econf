@@ -64,24 +64,8 @@ struct parser_data
     char linebuffer[0];
   };
 
-#ifdef ENTDATA
-/* The function can't be exported, because the entdata structure
-   is defined only in files-foo.c.  */
-# define parser_stclass static
-# define nss_files_parse_hidden_def(name)
-#else
-/* Export the line parser function so it can be used in nss_db.  */
-# define parser_stclass static
-# define parse_line CONCAT(_nss_files_parse_,ENTNAME)
-# ifdef IS_IN_libc
-/* We are defining one of the functions that actually lives in libc
-   because it is used to implement fget*ent and suchlike.  */
-#  define nss_files_parse_hidden_def(name) libc_hidden_def (name)
-# else
-#  define nss_files_parse_hidden_def(name) libnss_files_hidden_def (name)
-# endif
-#endif
 
+#define parse_line CONCAT(_nss_files_parse_,ENTNAME)
 
 #ifdef EXTERN_PARSER
 
@@ -97,7 +81,7 @@ extern int parse_line (char *line, struct STRUCTURE *result,
 /* Define a line parsing function.  */
 
 # define LINE_PARSER(EOLSET, BODY)					      \
-parser_stclass int							      \
+static int							      \
 parse_line (char *line, struct STRUCTURE *result,			      \
 	    struct parser_data *data, size_t datalen, int *errnop	      \
 	    EXTRA_ARGS_DECL)						      \

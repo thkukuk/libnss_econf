@@ -129,11 +129,11 @@ internal_getent (struct data_t *data, struct STRUCTURE *result,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  strcpy (buffer, val);
+  struct parser_data *pdata = (void *) buffer;
+  strcpy (pdata->linebuffer, val);
   free (val);
 
-  struct parser_data *pdata = (void *) buffer;
-  if (CONCAT(_nss_files_parse_,ENTNAME) (buffer, result, pdata, buflen, errnop) == -1)
+  if (CONCAT(_nss_files_parse_,ENTNAME) (pdata->linebuffer, result, pdata, buflen, errnop) == -1)
     return NSS_STATUS_TRYAGAIN;
 
   data->next_key++;
@@ -181,11 +181,11 @@ internal_getkey (struct data_t *data, const char *key,
       return NSS_STATUS_TRYAGAIN;
     }
 
-  strcpy (buffer, val);
+  struct parser_data *pdata = (void *) buffer;
+  strcpy (pdata->linebuffer, val);
   free (val);
 
-  struct parser_data *pdata = (void *) buffer;
-  if (CONCAT(_nss_files_parse_,ENTNAME) (buffer, result, pdata, buflen, errnop) == -1)
+  if (CONCAT(_nss_files_parse_,ENTNAME) (pdata->linebuffer, result, pdata, buflen, errnop) == -1)
     return NSS_STATUS_TRYAGAIN;
 
   data->next_key++;
@@ -210,7 +210,7 @@ CONCAT(_nss_econf_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 
   if (status == NSS_STATUS_SUCCESS)
     status = internal_getent (&global_data, result, buffer, buflen,
-		              errnop H_ERRNO_ARG);
+		              errnop H_ERRNO_ARG EXTRA_ARGS_VALUE);
 
   pthread_mutex_unlock (&lock);
 
@@ -241,7 +241,7 @@ _nss_econf_get##name##_r (proto,					      \
   if (status == NSS_STATUS_SUCCESS)                                           \
     {                                                                         \
       while ((status = internal_getent (&local_data, result, buffer,          \
-					buflen, errnop H_ERRNO_ARG))          \
+					buflen, errnop H_ERRNO_ARG EXTRA_ARGS_VALUE)) \
 	     == NSS_STATUS_SUCCESS)                                           \
 	{ break_if_match }                                                    \
                                                                               \
