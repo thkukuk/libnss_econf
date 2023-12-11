@@ -8,6 +8,7 @@ project(
                   'prefix=/usr',
                   'sysconfdir=/etc',
 		  'b_pie=true',
+                  'b_lto=true',
 		  'warning_level=2',],
   license : 'LGPLv2+',
   version : '0.0.1',
@@ -23,8 +24,6 @@ inc = include_directories('include')
 
 possible_cc_flags = [
 		  '-D_FORTIFY_SOURCE=2',
-                  '-flto=auto',
-                  '-ffat-lto-objects',
 		  '-fstack-protector-strong',
 		  '-funwind-tables',
 		  '-fasynchronous-unwind-tables',
@@ -46,6 +45,7 @@ add_project_arguments(cc.get_supported_arguments(possible_cc_flags), language : 
 libnss_econf_src = files(
   'src/aliases.c',
   'src/group.c',
+  'src/hosts.c',
   'src/internal.c',
   'src/networks.c',
   'src/passwd.c',

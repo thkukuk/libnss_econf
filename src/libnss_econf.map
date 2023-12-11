@@ -11,6 +11,13 @@ NSS_ECONF_PRIVATE_2.0 {
     _nss_econf_getgrent_r;
     _nss_econf_setgrent;
 
+    _nss_econf_endhostent;
+    _nss_econf_gethostbyaddr_r;
+    _nss_econf_gethostbyname_r;
+    _nss_econf_gethostbyname2_r;
+    _nss_econf_gethostent_r;
+    _nss_econf_sethostent;
+
     _nss_econf_endnetent;
     _nss_econf_getnetbyaddr_r;
     _nss_econf_getnetbyname_r;

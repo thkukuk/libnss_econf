@@ -17,6 +17,14 @@ test('tst-getgrnam_r', tst_getgrnam_r_exe)
 tst_getgrgid_r_exe = executable('tst-getgrgid_r', 'tst-getgrgid_r.c', dependencies : libnss_econf_dep)
 test('tst-getgrgid_r', tst_getgrgid_r_exe)
 
+# hosts
+tst_gethostent_r_exe = executable('tst-gethostent_r', 'tst-gethostent_r.c', dependencies : libnss_econf_dep)
+test('tst-gethostent_r', tst_gethostent_r_exe)
+tst_gethostbyaddr_r_exe = executable('tst-gethostbyaddr_r', 'tst-gethostbyaddr_r.c', dependencies : libnss_econf_dep)
+test('tst-gethostbyaddr_r', tst_gethostbyaddr_r_exe)
+tst_gethostbyname_r_exe = executable('tst-gethostbyname_r', 'tst-gethostbyname_r.c', dependencies : libnss_econf_dep)
+test('tst-gethostbyname_r', tst_gethostbyname_r_exe)
+
 # networks
 tst_getnetent_r_exe = executable('tst-getnetent_r', 'tst-getnetent_r.c', dependencies : libnss_econf_dep)
 test('tst-getnetent_r', tst_getnetent_r_exe)

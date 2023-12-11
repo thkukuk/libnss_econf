@@ -58,6 +58,20 @@ extern enum nss_status _nss_econf_getgrgid_r (gid_t gid,
                 struct group *result, char *buffer, size_t buflen,
                 int *errnop);
 
+extern enum nss_status _nss_econf_sethostent (int stayopen);
+extern enum nss_status _nss_econf_endhostent (void);
+extern enum nss_status _nss_econf_gethostent_r (struct hostent *result,
+		char *buffer, size_t buflen, int *errnop, int *herrnop);
+extern enum nss_status _nss_econf_gethostbyaddr_r (const void *addr,
+		socklen_t addrlen, int af, struct hostent *host,
+		char *buffer, size_t buflen, int *errnop, int *h_errnop);
+extern enum nss_status _nss_econf_gethostbyname_r (const char *name,
+                struct hostent *result, char *buffer, size_t buflen,
+                int *errnop, int *herrnop);
+extern enum nss_status _nss_econf_gethostbyname2_r (const char *name, int af,
+                struct hostent *result, char *buffer, size_t buflen,
+                int *errnop, int *herrnop);
+
 extern enum nss_status _nss_econf_setnetent (int stayopen);
 extern enum nss_status _nss_econf_endnetent (void);
 extern enum nss_status _nss_econf_getnetent_r (struct netent *result,

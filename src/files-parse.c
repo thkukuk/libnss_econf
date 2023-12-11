@@ -31,9 +31,9 @@
    ENTDATA -- if defined, `struct ENTDATA' is used by the parser to store
 	      things pointed to by the resultant `struct STRUCTURE'.
 
-   NEED_H_ERRNO - defined iff an arg `int *herrnop' is used.
+   NEED_H_ERRNO - defined if an arg `int *herrnop' is used.
 
-   EXTRA_ARGS -- defined iff extra parameters must be passed to the parser
+   EXTRA_ARGS -- defined if extra parameters must be passed to the parser
    EXTRA_ARGS_DECL -- declaration for these extra parameters
    EXTRA_ARGS_VALUE -- values to be passed for these parameters
 

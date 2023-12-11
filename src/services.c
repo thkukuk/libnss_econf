@@ -67,7 +67,6 @@ internal_getent (struct data_t *data, struct servent *serv,
 
 #define STRUCT_NAME s_name
 #define DELIM ""
-#define NO_INTERNAL_GETENT
 
 #include "econf-XXX.c"
 

@@ -14,34 +14,21 @@
    You should have received a copy of the GNU Lesser General Public
    License along with program; if not, see <https://www.gnu.org/licenses/>. */
 
-#include "config.h"
+#include <arpa/inet.h>
 
-#include "nss-econf.h"
+#define ENTNAME hostent
+#define NEED_H_ERRNO
 
-#define ENTNAME         rpcent
-#define DATABASE	"rpc"
+#define PRINT_RESULT \
+	printf("[%s]", result->h_name); \
+	if (result->h_aliases)                                 \
+	  for (char **p = result->h_aliases; *p != NULL; p++)  \
+	    printf(" [%s]", *p);                               \
+	if (result->h_addrtype != AF_INET) 		       \
+	  printf("Not an IPv4 internet address.");             \
+	else                                                   \
+          for (char **p = result->h_addr_list; *p; p++)        \
+            printf(" %s", inet_ntoa((*(struct in_addr *)*p))); \
+	printf("\n");
 
-#define TRAILING_LIST_MEMBER            r_aliases
-#define TRAILING_LIST_SEPARATOR_P       isspace
-#include "files-parse.c"
-LINE_PARSER
-("#",
- /* STRING_FIELD (result->r_name, isspace, 1); */
- INT_FIELD (result->r_number, isspace, 1, 10,);
- )
-
-#define STRUCT_NAME r_name
-#define DELIM " \t"
-#define NEED_GETENT
-
-#include "econf-XXX.c"
-
-DB_LOOKUP (rpcbyname, '.', 0, ("%s", name),
-           LOOKUP_NAME (r_name, r_aliases),
-           const char *name)
-
-DB_LOOKUP (rpcbynumber, '=', 20, ("%zd", (ssize_t) number),
-           {
-             if (result->r_number == number)
-               break;
-           }, int number)
+#include "tst-getXXXent_r.c"

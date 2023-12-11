@@ -66,6 +66,8 @@ LINE_PARSER
 
 #define STRUCT_NAME sp_namp
 #define DELIM ":"
+#define NEED_GETENT
+#define NEED_GETKEY
 
 #include "econf-XXX.c"
 

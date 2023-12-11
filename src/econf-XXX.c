@@ -82,7 +82,7 @@ CONCAT(_nss_econf_end,ENTNAME) (void)
   return NSS_STATUS_SUCCESS;
 }
 
-#ifndef NO_INTERNAL_GETENT
+#ifdef NEED_GETENT
 /* Parsing the database file into `struct STRUCTURE' data structures.  */
 static enum nss_status
 internal_getent (struct data_t *data, struct STRUCTURE *result,
@@ -142,7 +142,9 @@ internal_getent (struct data_t *data, struct STRUCTURE *result,
 
   return NSS_STATUS_SUCCESS;
 }
+#endif
 
+#ifdef NEED_GETKEY
 static enum nss_status
 internal_getkey (struct data_t *data, const char *key,
 		 struct STRUCTURE *result, char *buffer, size_t buflen,

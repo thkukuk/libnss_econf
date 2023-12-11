@@ -32,6 +32,7 @@ LINE_PARSER
 
 #define STRUCT_NAME p_name
 #define DELIM " \t"
+#define NEED_GETENT
 
 #include "econf-XXX.c"
 
