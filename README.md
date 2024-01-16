@@ -26,6 +26,7 @@ The following services are supported:
 For **group**, **passwd** and **shadow** the +/- entries are not supported.
 
 Keys in the maps needs to be unique, if several entries in a file have the same name, it's undefined which one will be returned.
+As the entries in the *services* file do not have a single unique key, but each entry is identified by two keys, the handling of this file is somewhat special: overwriting existing entries only works with the functions [getservbyname(3)](https://manpages.opensuse.org/getservbyname.3) and [getservbyport(3)](https://manpages.opensuse.org/getservbyport.3), [getservent(3)](https://manpages.opensuse.org/getservent.3) lists both entries, the old and the new one.
 
 Not supported are *ethers*, *initgroups*, *netgroup* and *publickey*.
 

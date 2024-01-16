@@ -65,10 +65,64 @@ internal_getent (struct data_t *data, struct servent *serv,
   return NSS_STATUS_SUCCESS;
 }
 
+static enum nss_status
+internal_getent_backward (struct data_t *data, struct servent *serv,
+			  char *buffer, size_t buflen, int *errnop)
+{
+  struct parser_data *pdata = (void *) buffer;
+
+  if (data->key_file == NULL || data->key_number == 0)
+    /* No entry */
+    return NSS_STATUS_NOTFOUND;
+
+  if (data->next_key < 1)
+    /* All entries returned */
+    return NSS_STATUS_NOTFOUND;
+
+  if ((strlen (data->keys[data->next_key - 1]) + 1) > buflen)
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_TRYAGAIN;
+    }
+  strcpy (buffer, data->keys[data->next_key - 1]);
+
+  if (_nss_files_parse_servent (buffer, serv, pdata, buflen, errnop) == -1)
+    return NSS_STATUS_TRYAGAIN;
+
+  data->next_key--;
+
+  return NSS_STATUS_SUCCESS;
+}
+
+
 #define STRUCT_NAME s_name
 #define DELIM ""
 
 #include "econf-XXX.c"
+
+#undef DB_LOOKUP
+#define DB_LOOKUP(name, break_if_match, proto...)                             \
+enum nss_status                                                               \
+_nss_econf_get##name##_r (proto,                                              \
+                          struct STRUCTURE *result, char *buffer,             \
+                          size_t buflen, int *errnop H_ERRNO_PROTO)           \
+{                                                                             \
+  struct data_t local_data = {NULL, NULL, 0, 0};                              \
+  enum nss_status status = internal_setent (&local_data, DATABASE, DELIM);    \
+                                                                              \
+  local_data.next_key = local_data.key_number;			              \
+  if (status == NSS_STATUS_SUCCESS)                                           \
+    {                                                                         \
+      while ((status = internal_getent_backward (&local_data, result, buffer, \
+                                        buflen, errnop H_ERRNO_ARG EXTRA_ARGS_VALUE)) \
+             == NSS_STATUS_SUCCESS)                                           \
+        { break_if_match }                                                    \
+                                                                              \
+      internal_endent (&local_data);                                          \
+    }                                                                         \
+                                                                              \
+  return status;                                                              \
+}
 
 DB_LOOKUP (servbyname,
            {
