@@ -48,7 +48,7 @@ LINE_PARSER
 
 DB_LOOKUP_KEY (pwnam, name)
 
-DB_LOOKUP (pwuid, '=', 20, ("%lu", (unsigned long int) uid),
+DB_LOOKUP (pwuid,
            {
              if (result->pw_uid == uid)
                break;

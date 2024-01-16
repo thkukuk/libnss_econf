@@ -42,7 +42,7 @@ LINE_PARSER
 
 DB_LOOKUP_KEY (grnam, name)
 
-DB_LOOKUP (grgid, '=', 20, ("%lu", (unsigned long int) gid),
+DB_LOOKUP (grgid,
            {
              if (result->gr_gid == gid)
                break;

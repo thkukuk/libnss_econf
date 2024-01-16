@@ -36,11 +36,11 @@ LINE_PARSER
 
 #include "econf-XXX.c"
 
-DB_LOOKUP (protobyname, '.', 0, ("%s", name),
+DB_LOOKUP (protobyname,
            LOOKUP_NAME (p_name, p_aliases),
            const char *name)
 
-DB_LOOKUP (protobynumber, '=', 20, ("%zd", (ssize_t) proto),
+DB_LOOKUP (protobynumber,
            {
              if (result->p_proto == proto)
                break;

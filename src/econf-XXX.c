@@ -231,7 +231,7 @@ CONCAT(_nss_econf_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
    BREAK_IF_MATCH is a block of code which compares `struct STRUCTURE *result'
    to the lookup key arguments and does `break;' if they match.  */
 
-#define DB_LOOKUP(name, db_char, keysize, keypattern, break_if_match, proto...)\
+#define DB_LOOKUP(name, break_if_match, proto...)			      \
 enum nss_status								      \
 _nss_econf_get##name##_r (proto,					      \
 			  struct STRUCTURE *result, char *buffer,	      \

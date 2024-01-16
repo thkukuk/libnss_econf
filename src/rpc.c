@@ -36,11 +36,11 @@ LINE_PARSER
 
 #include "econf-XXX.c"
 
-DB_LOOKUP (rpcbyname, '.', 0, ("%s", name),
+DB_LOOKUP (rpcbyname,
            LOOKUP_NAME (r_name, r_aliases),
            const char *name)
 
-DB_LOOKUP (rpcbynumber, '=', 20, ("%zd", (ssize_t) number),
+DB_LOOKUP (rpcbynumber,
            {
              if (result->r_number == number)
                break;

@@ -140,7 +140,7 @@ internal_getent (struct data_t *data, struct hostent *result,
 /* We only need to consider IPv4 mapped addresses if the input to the
    gethostbyaddr() function is an IPv6 address.  */
 #define EXTRA_ARGS_VALUE , af
-DB_LOOKUP (hostbyaddr, ,,,
+DB_LOOKUP (hostbyaddr,
            {
              if (result->h_length == (int) len
                  && ! memcmp (addr, result->h_addr_list[0], len))

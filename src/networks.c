@@ -76,11 +76,11 @@ LINE_PARSER
 
 #include "econf-XXX.c"
 
-DB_LOOKUP (netbyname, ,,,
+DB_LOOKUP (netbyname,
            LOOKUP_NAME_CASE (n_name, n_aliases),
            const char *name)
 
-DB_LOOKUP (netbyaddr, ,,,
+DB_LOOKUP (netbyaddr,
            {
              if ((type == AF_UNSPEC || result->n_addrtype == type)
                  && result->n_net == net)

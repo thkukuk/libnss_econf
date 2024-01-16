@@ -70,22 +70,17 @@ internal_getent (struct data_t *data, struct servent *serv,
 
 #include "econf-XXX.c"
 
-DB_LOOKUP (servbyname, ':',
-           strlen (name) + 2 + (proto == NULL ? 0 : strlen (proto)),
-           ("%s/%s", name, proto ?: ""),
+DB_LOOKUP (servbyname,
            {
              /* Must match both protocol (if specified) and name.  */
-             if (proto != NULL && strcmp (result->s_proto, proto))
-               /* A continue statement here breaks nss_db, because it
-                bypasses advancing to the next db entry, and it
-                doesn't make nss_files any more efficient.  */;
+             if (proto != NULL && strcmp (result->s_proto, proto) != 0)
+	       continue;
              else
                LOOKUP_NAME (s_name, s_aliases)
            },
            const char *name, const char *proto)
 
-DB_LOOKUP (servbyport, '=', 21 + (proto ? strlen (proto) : 0),
-           ("%zd/%s", (ssize_t) ntohs (port), proto ?: ""),
+DB_LOOKUP (servbyport,
            {
              /* Must match both port and protocol.  */
              if (result->s_port == port
